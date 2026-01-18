@@ -1,0 +1,26 @@
+metrics:
+  code_quality:
+    - name: "テストカバレッジ"
+      target: ">80%"
+      current: "82.5%"
+
+    - name: "技術的負債"
+      target: "< 5%"
+      current: "3.2%"
+
+    - name: "平均サイクロマティック複雑度"
+      target: "< 10"
+      current: "7.8"
+
+  process_quality:
+    - name: "PRレビュー時間"
+      target: "< 24時間"
+      current: "18時間"
+
+    - name: "デプロイ頻度"
+      target: ">= 週2回"
+      current: "週3回"
+
+    - name: "インシデント発生率"
+      target: "< 1%"
+      current: "0.5%"
