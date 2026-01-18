@@ -10,3 +10,24 @@ dependencies = [
     "pydantic>=2.12.5",
     "python-dotenv>=1.2.1",
 ]
+
+[tool.coverage.run]
+souece = ["src"]
+branch = true
+parallel = true
+omit = [
+    "*/tests/*",
+    "*/migrations/*",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_coverd = false
+exlude_lines = [
+    "pragma: no_cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
