@@ -1,0 +1,41 @@
+name: Monthly Rotation
+
+on: schedule:
+      - cron: '0 0 1 * *'  # Runs at 00:00 on the first day of every month
+  workflow_dispatch:
+
+jobs:
+  rotate-api-keys:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate New API Key
+        id: generate_key
+        run: |
+          # Replace the following line with the actual command to generate a new API key
+          NEW_API_KEY=$(curl -X POST https://api.example.com/v1/keys \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"name": "mcp-server-key-'$(date +%Y-%m)'" }' | jq -r '.api_key')
+          echo "new_key=$NEW_KEY" >> $GITHUB_OUTPUT
+
+      - name: Update Guthub secrets
+        uses: gliech/create-github-secret-action@v1
+        with:
+          secret_name: MCP_API_KEY
+          secret_value: ${{ steps.generate.outputs.new_key }}
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      
+      - name: Revoke Old Key
+        run: |
+          # Replace the following line with the actual command to revoke the old API key
+          curl -X DELETE https://api.example.com/v1/keys/${{ secrets.OLD_KEY_ID }} \
+            -H "Authorization: Bearer ${{ secrets.ADMIN_TOKEN }}"
+
+      - name: Notify Team
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "APIキーのローテーションが完了しました。\n新しいAPIキー: `${{ steps.generate.outputs.new_key }}`"
+            } 
